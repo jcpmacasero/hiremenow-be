@@ -7,9 +7,16 @@ from app.schemas.company import (
     CompanyResponse,
     CompanyListResponse,
 )
+from app.schemas.employer import (
+    EmployerCreate,
+    EmployerUpdate,
+    EmployerResponse,
+    EmployerListResponse,
+)
 
 __all__ = [
     "UserCreate", "UserResponse", "UserUpdate",
     "Token", "TokenPayload", "LoginRequest",
     "CompanyCreate", "CompanyUpdate", "CompanyResponse", "CompanyListResponse",
+    "EmployerCreate", "EmployerUpdate", "EmployerResponse", "EmployerListResponse",
 ]
