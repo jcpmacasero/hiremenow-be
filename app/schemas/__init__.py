@@ -19,6 +19,12 @@ from app.schemas.candidate import (
     CandidateResponse,
     CandidateListResponse,
 )
+from app.schemas.job import (
+    JobCreate,
+    JobUpdate,
+    JobResponse,
+    JobListResponse,
+)
 
 __all__ = [
     "UserCreate", "UserResponse", "UserUpdate",
@@ -26,4 +32,5 @@ __all__ = [
     "CompanyCreate", "CompanyUpdate", "CompanyResponse", "CompanyListResponse",
     "EmployerCreate", "EmployerUpdate", "EmployerResponse", "EmployerListResponse",
     "CandidateCreate", "CandidateUpdate", "CandidateResponse", "CandidateListResponse",
+    "JobCreate", "JobUpdate", "JobResponse", "JobListResponse",
 ]
