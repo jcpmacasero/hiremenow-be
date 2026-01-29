@@ -20,13 +20,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    # Create passport_status enum
-    passportstatus = postgresql.ENUM('valid', 'expired', 'none', 'in_progress', name='passportstatus', create_type=False)
-    passportstatus.create(op.get_bind(), checkfirst=True)
-
-    # Create lead_source enum
-    leadsource = postgresql.ENUM('website', 'facebook', 'instagram', 'referral', 'other', name='leadsource', create_type=False)
-    leadsource.create(op.get_bind(), checkfirst=True)
+    # Create enums using raw SQL
+    op.execute("CREATE TYPE passportstatus AS ENUM ('valid', 'expired', 'none', 'in_progress')")
+    op.execute("CREATE TYPE leadsource AS ENUM ('website', 'facebook', 'instagram', 'referral', 'other')")
 
     # Create candidates table
     op.create_table(
@@ -39,13 +35,13 @@ def upgrade() -> None:
         sa.Column('date_of_birth', sa.Date(), nullable=True),
         sa.Column('nationality', sa.String(length=100), nullable=True),
         sa.Column('current_country', sa.String(length=100), nullable=True),
-        sa.Column('passport_status', sa.Enum('valid', 'expired', 'none', 'in_progress', name='passportstatus'), nullable=False, server_default='none'),
+        sa.Column('passport_status', postgresql.ENUM('valid', 'expired', 'none', 'in_progress', name='passportstatus', create_type=False), nullable=False, server_default='none'),
         sa.Column('passport_expiry', sa.Date(), nullable=True),
         sa.Column('preferred_positions', postgresql.JSONB(astext_type=sa.Text()), nullable=False, server_default='[]'),
         sa.Column('experience_years', sa.Integer(), nullable=False, server_default='0'),
         sa.Column('photo_url', sa.String(length=500), nullable=True),
         sa.Column('resume_url', sa.String(length=500), nullable=True),
-        sa.Column('source', sa.Enum('website', 'facebook', 'instagram', 'referral', 'other', name='leadsource'), nullable=False, server_default='website'),
+        sa.Column('source', postgresql.ENUM('website', 'facebook', 'instagram', 'referral', 'other', name='leadsource', create_type=False), nullable=False, server_default='website'),
         sa.Column('referral_code', sa.String(length=50), nullable=True),
         sa.Column('current_stage', sa.String(length=50), nullable=False, server_default='lead'),
         sa.Column('stage_notes', sa.Text(), nullable=True),

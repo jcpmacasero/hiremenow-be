@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.api.deps import get_admin_user
-from app.models.user import User, UserRole
+from app.models.user import User
 from app.models.company import Company
 from app.models.employer import Employer
 from app.core.security import hash_password
@@ -80,7 +80,7 @@ def create_employer(
     user = User(
         email=data.email,
         password_hash=hash_password(data.password),
-        role=UserRole.EMPLOYER,
+        role='employer',
         is_active=True,
     )
     db.add(user)

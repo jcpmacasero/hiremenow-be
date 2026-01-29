@@ -5,7 +5,7 @@ from uuid import UUID
 from typing import List
 from app.database import get_db
 from app.core.security import decode_token
-from app.models.user import User, UserRole
+from app.models.user import User
 
 security = HTTPBearer()
 
@@ -41,7 +41,8 @@ def get_current_user(
     return user
 
 
-def require_roles(allowed_roles: List[UserRole]):
+def require_roles(allowed_roles: List[str]):
+    """Check if user has one of the allowed roles (use lowercase: 'admin', 'employer', etc.)"""
     def role_checker(current_user: User = Depends(get_current_user)) -> User:
         if current_user.role not in allowed_roles:
             raise HTTPException(
@@ -53,13 +54,13 @@ def require_roles(allowed_roles: List[UserRole]):
 
 
 # Convenience dependencies
-def get_admin_user(user: User = Depends(require_roles([UserRole.ADMIN]))) -> User:
+def get_admin_user(user: User = Depends(require_roles(['admin']))) -> User:
     return user
 
 
-def get_employer_user(user: User = Depends(require_roles([UserRole.ADMIN, UserRole.EMPLOYER]))) -> User:
+def get_employer_user(user: User = Depends(require_roles(['admin', 'employer']))) -> User:
     return user
 
 
-def get_candidate_user(user: User = Depends(require_roles([UserRole.ADMIN, UserRole.CANDIDATE]))) -> User:
+def get_candidate_user(user: User = Depends(require_roles(['admin', 'candidate']))) -> User:
     return user

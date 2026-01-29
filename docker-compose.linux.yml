@@ -33,6 +33,9 @@ services:
       - .env
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       ENVIRONMENT: ${ENVIRONMENT}
       DEBUG: ${DEBUG}
       SECRET_KEY: ${SECRET_KEY}
@@ -45,6 +48,7 @@ services:
       - "${PORT}:8000"
     volumes:
       - .:/app
+      - /app/__pycache__
     networks:
       - hiremenow-network
     depends_on:

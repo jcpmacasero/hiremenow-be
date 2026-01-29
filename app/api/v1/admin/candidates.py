@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.api.deps import get_admin_user
-from app.models.user import User, UserRole
+from app.models.user import User
 from app.models.candidate import Candidate, PassportStatus, LeadSource
 from app.core.security import hash_password
 from app.schemas.candidate import (
@@ -86,7 +86,7 @@ def create_candidate(
     user = User(
         email=data.email,
         password_hash=hash_password(data.password),
-        role=UserRole.CANDIDATE,
+        role='candidate',
         is_active=True,
     )
     db.add(user)

@@ -5,7 +5,6 @@ from uuid import UUID
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from app.config import get_settings
-from app.models.user import UserRole
 
 settings = get_settings()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -19,22 +18,22 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(user_id: UUID, role: UserRole) -> str:
+def create_access_token(user_id: UUID, role: str) -> str:
     expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
     payload = {
         "sub": str(user_id),
-        "role": role.value,
+        "role": role,
         "exp": expire,
         "type": "access"
     }
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
 
 
-def create_refresh_token(user_id: UUID, role: UserRole) -> str:
+def create_refresh_token(user_id: UUID, role: str) -> str:
     expire = datetime.utcnow() + timedelta(days=settings.refresh_token_expire_days)
     payload = {
         "sub": str(user_id),
-        "role": role.value,
+        "role": role,
         "exp": expire,
         "type": "refresh"
     }

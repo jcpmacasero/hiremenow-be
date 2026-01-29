@@ -15,7 +15,7 @@ def create_admin():
     db = SessionLocal()
     try:
         # Check if admin exists
-        admin = db.query(User).filter(User.role == UserRole.ADMIN).first()
+        admin = db.query(User).filter(User.role == 'admin').first()
         if admin:
             print(f"Admin user already exists: {admin.email}")
             return
@@ -24,7 +24,7 @@ def create_admin():
         admin = User(
             email="admin@hiremenow.com",
             password_hash=hash_password("admin123"),
-            role=UserRole.ADMIN,
+            role='admin',
             is_active=True
         )
         db.add(admin)

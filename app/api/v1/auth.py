@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.user import User, UserRole
+from app.models.user import User
 from app.schemas.auth import LoginRequest, Token
 from app.schemas.user import UserCreate, UserResponse
 from app.core.security import (
@@ -29,7 +29,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     user = User(
         email=user_data.email,
         password_hash=hash_password(user_data.password),
-        role=UserRole.CANDIDATE
+        role='candidate'
     )
     db.add(user)
     db.commit()
@@ -66,10 +66,16 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     )
 
 
+from pydantic import BaseModel
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
 @router.post("/refresh", response_model=Token)
-def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
+def refresh_token(data: RefreshRequest, db: Session = Depends(get_db)):
     """Get new access token using refresh token"""
-    payload = decode_token(refresh_token)
+    payload = decode_token(data.refresh_token)
 
     if not payload or payload.get("type") != "refresh":
         raise HTTPException(
