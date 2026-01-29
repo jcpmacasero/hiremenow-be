@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime, date
 from enum import Enum as PyEnum
-from sqlalchemy import Column, String, Boolean, DateTime, Date, Integer, ForeignKey, Enum, Text, Numeric
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Boolean, DateTime, Date, Integer, ForeignKey, Text, Numeric
+from sqlalchemy.dialects.postgresql import UUID, JSONB, ENUM
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -33,6 +33,13 @@ class SalaryPeriod(str, PyEnum):
     MONTHLY = "monthly"
 
 
+# PostgreSQL ENUM types
+workmode_enum = ENUM('onsite', 'accommodation_provided', name='workmode', create_type=False)
+jobtype_enum = ENUM('full_time', 'part_time', 'contract', 'seasonal', name='jobtype', create_type=False)
+jobstatus_enum = ENUM('draft', 'pending_approval', 'active', 'paused', 'closed', 'rejected', name='jobstatus', create_type=False)
+salaryperiod_enum = ENUM('hourly', 'monthly', name='salaryperiod', create_type=False)
+
+
 class Job(Base):
     __tablename__ = "jobs"
 
@@ -49,16 +56,16 @@ class Job(Base):
     # Location
     country = Column(String(100), nullable=False)
     city = Column(String(100), nullable=True)
-    work_mode = Column(Enum(WorkMode), default=WorkMode.ONSITE, nullable=False)
+    work_mode = Column(workmode_enum, default='onsite', nullable=False)
 
     # Employment
-    job_type = Column(Enum(JobType), default=JobType.FULL_TIME, nullable=False)
+    job_type = Column(jobtype_enum, default='full_time', nullable=False)
 
     # Salary
     salary_min = Column(Numeric(10, 2), nullable=True)
     salary_max = Column(Numeric(10, 2), nullable=True)
     salary_currency = Column(String(3), default="EUR", nullable=False)
-    salary_period = Column(Enum(SalaryPeriod), default=SalaryPeriod.MONTHLY, nullable=False)
+    salary_period = Column(salaryperiod_enum, default='monthly', nullable=False)
 
     # Details
     benefits = Column(JSONB, default=list, nullable=False)
@@ -69,7 +76,7 @@ class Job(Base):
     filled_slots = Column(Integer, default=0, nullable=False)
 
     # Status & dates
-    status = Column(Enum(JobStatus), default=JobStatus.DRAFT, nullable=False)
+    status = Column(jobstatus_enum, default='draft', nullable=False)
     rejection_reason = Column(Text, nullable=True)
     deadline = Column(Date, nullable=True)
     start_date = Column(Date, nullable=True)

@@ -21,5 +21,9 @@ python -m scripts.seed_admin
 
 echo "Seeding complete - starting server..."
 
-# Start the application
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+# Start the application with reload in development
+if [ "$ENVIRONMENT" = "development" ]; then
+    exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+else
+    exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+fi

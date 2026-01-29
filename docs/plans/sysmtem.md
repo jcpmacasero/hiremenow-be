@@ -229,3 +229,47 @@ JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 HOST=0.0.0.0
 PORT=8000 -->
+
+<!-- 
+# ===========================================
+# HireMeNow Environment Variables
+# ===========================================
+
+# -------------------------------------------
+# PostgreSQL Database Configuration
+# -------------------------------------------
+POSTGRES_USER=hiremenow
+POSTGRES_PASSWORD=hiremenow_secret
+POSTGRES_DB=hiremenow_db
+POSTGRES_HOST=postgres
+POSTGRES_PORT=54321
+
+# -------------------------------------------
+# FastAPI Backend Configuration
+# -------------------------------------------
+ENVIRONMENT=development
+DEBUG=true
+SECRET_KEY=your-super-secret-key-change-in-production
+API_VERSION=v1
+
+# Database URL (constructed from above variables)
+DATABASE_URL=postgresql://hiremenow:hiremenow_secret@postgres:54321/hiremenow_db
+
+# -------------------------------------------
+# CORS Configuration
+# -------------------------------------------
+CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+
+# -------------------------------------------
+# JWT Authentication (if needed)
+# -------------------------------------------
+JWT_SECRET_KEY=your-jwt-secret-key-change-in-production
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# -------------------------------------------
+# Server Configuration
+# -------------------------------------------
+HOST=0.0.0.0
+PORT=8000 -->
+

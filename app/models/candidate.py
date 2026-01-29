@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime, date
 from enum import Enum as PyEnum
-from sqlalchemy import Column, String, Boolean, DateTime, Date, Integer, ForeignKey, Enum, Text
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Boolean, DateTime, Date, Integer, ForeignKey, Text
+from sqlalchemy.dialects.postgresql import UUID, JSONB, ENUM
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -22,6 +22,11 @@ class LeadSource(str, PyEnum):
     OTHER = "other"
 
 
+# PostgreSQL ENUM types
+passportstatus_enum = ENUM('valid', 'expired', 'none', 'in_progress', name='passportstatus', create_type=False)
+leadsource_enum = ENUM('website', 'facebook', 'instagram', 'referral', 'other', name='leadsource', create_type=False)
+
+
 class Candidate(Base):
     __tablename__ = "candidates"
 
@@ -37,7 +42,7 @@ class Candidate(Base):
     current_country = Column(String(100), nullable=True)
 
     # Passport
-    passport_status = Column(Enum(PassportStatus), default=PassportStatus.NONE, nullable=False)
+    passport_status = Column(passportstatus_enum, default='none', nullable=False)
     passport_expiry = Column(Date, nullable=True)
 
     # Professional
@@ -49,7 +54,7 @@ class Candidate(Base):
     resume_url = Column(String(500), nullable=True)
 
     # Tracking
-    source = Column(Enum(LeadSource), default=LeadSource.WEBSITE, nullable=False)
+    source = Column(leadsource_enum, default='website', nullable=False)
     referral_code = Column(String(50), nullable=True)
 
     # Pipeline tracking (will link to pipeline_stages later)
