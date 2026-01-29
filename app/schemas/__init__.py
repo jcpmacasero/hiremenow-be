@@ -13,10 +13,17 @@ from app.schemas.employer import (
     EmployerResponse,
     EmployerListResponse,
 )
+from app.schemas.candidate import (
+    CandidateCreate,
+    CandidateUpdate,
+    CandidateResponse,
+    CandidateListResponse,
+)
 
 __all__ = [
     "UserCreate", "UserResponse", "UserUpdate",
     "Token", "TokenPayload", "LoginRequest",
     "CompanyCreate", "CompanyUpdate", "CompanyResponse", "CompanyListResponse",
     "EmployerCreate", "EmployerUpdate", "EmployerResponse", "EmployerListResponse",
+    "CandidateCreate", "CandidateUpdate", "CandidateResponse", "CandidateListResponse",
 ]
