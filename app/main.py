@@ -1,6 +1,9 @@
 # hiremenow-be/app/main.py
+from pathlib import Path
+
 from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from app.config import get_settings
 from app.api.v1.router import api_router
@@ -111,6 +114,11 @@ async def options_handler(full_path: str, request: Request):
     return response
 
 app.include_router(api_router)
+
+# Create uploads directory and mount static files
+uploads_path = Path(settings.upload_dir)
+uploads_path.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_path)), name="uploads")
 
 
 @app.get("/api/health")

@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: str = "http://localhost:5173"
 
+    # File Storage
+    upload_dir: str = "./uploads"
+    max_file_size_mb: int = 10
+    allowed_image_types: str = "image/jpeg,image/png,image/webp"
+    allowed_resume_types: str = "application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
     class Config:
         env_file = ".env"
         extra = "ignore"

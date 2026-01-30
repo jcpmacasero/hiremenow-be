@@ -6,6 +6,8 @@ from typing import List
 from app.database import get_db
 from app.core.security import decode_token
 from app.models.user import User
+from app.models.candidate import Candidate
+from app.models.employer import Employer
 
 security = HTTPBearer()
 
@@ -64,3 +66,31 @@ def get_employer_user(user: User = Depends(require_roles(['admin', 'employer']))
 
 def get_candidate_user(user: User = Depends(require_roles(['admin', 'candidate']))) -> User:
     return user
+
+
+def get_current_candidate(
+    current_user: User = Depends(require_roles(["candidate"])),
+    db: Session = Depends(get_db),
+) -> Candidate:
+    """Require candidate role and return the Candidate record for current user."""
+    candidate = db.query(Candidate).filter(Candidate.user_id == current_user.id).first()
+    if not candidate:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Candidate profile not found",
+        )
+    return candidate
+
+
+def get_current_employer(
+    current_user: User = Depends(require_roles(["employer"])),
+    db: Session = Depends(get_db),
+) -> Employer:
+    """Require employer role and return the Employer record for current user."""
+    employer = db.query(Employer).filter(Employer.user_id == current_user.id).first()
+    if not employer:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Employer profile not found",
+        )
+    return employer

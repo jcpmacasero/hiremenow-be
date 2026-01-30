@@ -67,6 +67,8 @@ class Candidate(Base):
 
     # Relationships
     user = relationship("User", backref="candidate_profile")
+    job_matches = relationship("JobMatch", back_populates="candidate", cascade="all, delete-orphan")
+    documents = relationship("Document", back_populates="candidate", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Candidate {self.first_name} {self.last_name}>"

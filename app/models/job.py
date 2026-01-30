@@ -88,6 +88,7 @@ class Job(Base):
     # Relationships
     company = relationship("Company", back_populates="jobs")
     creator = relationship("User", backref="created_jobs")
+    job_matches = relationship("JobMatch", back_populates="job", cascade="all, delete-orphan")
 
     @property
     def available_slots(self) -> int:
